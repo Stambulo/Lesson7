@@ -12,7 +12,7 @@ public class ClientHandler {
     private DataOutputStream out;
     private Server server;
 
-    private String nick;
+    public String nick;
     private String login;
 
     public ClientHandler(Socket socket, Server server) {
@@ -51,10 +51,15 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.equals("/end")) {
                             out.writeUTF("/end");
-
                             break;
                         }
-                        server.broadcastMsg(str, nick);
+                        if (str.startsWith("/w")){
+                            String[] token = str.split(" ");
+                            server.personalMsg(token[1], token[2], this.nick); // Получатель, сообщение, отправитель
+                        }
+                        else {
+                            server.broadcastMsg(str, nick);
+                        }
                     }
 
                 } catch (IOException e) {
@@ -74,7 +79,6 @@ public class ClientHandler {
         }
     }
 
-
     public void sendMsg(String msg) {
         try {
             out.writeUTF(msg);
@@ -82,6 +86,4 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
-
-
 }

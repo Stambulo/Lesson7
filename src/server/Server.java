@@ -53,6 +53,14 @@ public class Server {
         }
     }
 
+    public void personalMsg(String targetNick, String msg, String senderNick) {
+        for (ClientHandler c : clients) {
+            if (c.nick.equals(targetNick)) {               // Находим нужного получателя
+                c.sendMsg(senderNick + ": " + msg);        // И отправляем сообщение
+            }
+        }
+    }
+
     public void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
     }
@@ -60,5 +68,4 @@ public class Server {
     public void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
     }
-
 }
